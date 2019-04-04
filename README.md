@@ -1,4 +1,1 @@
 # flash-sale
-SSM
-
-Test
