@@ -2,6 +2,7 @@ package com.loongzee.service.impl;
 
 import com.loongzee.dao.SeckillDao;
 import com.loongzee.dao.SuccessKilledDao;
+import com.loongzee.dao.cache.RedisDao;
 import com.loongzee.dto.Exposer;
 import com.loongzee.dto.SeckillExecution;
 import com.loongzee.entity.Seckill;
@@ -42,23 +43,25 @@ public class SeckillServiceImpl implements SeckillService {
     @Autowired //@Resource
     private SuccessKilledDao successKilledDao;
 
-//    @Autowired
-//    private RedisDao redisDao;
+    @Autowired
+    private RedisDao redisDao;
 
     @Override
     public List<Seckill> getSeckillList() {
         return seckillDao.queryAll(0, 4);
     }
 
-//    @Override
-//    public Seckill getById(long seckillId) {
-//        return redisDao.getOrPutSeckill(seckillId, id -> seckillDao.queryById(id));
-//    }
-
+    //use Redis and mysql
     @Override
     public Seckill getById(long seckillId) {
-        return seckillDao.queryById(seckillId);
+        return redisDao.getOrPutSeckill(seckillId, id -> seckillDao.queryById(id));
     }
+
+    //only use mysql
+//    @Override
+//    public Seckill getById(long seckillId) {
+//        return seckillDao.queryById(seckillId);
+//    }
 
     @Override
     public Exposer exportSeckillUrl(long seckillId) {
